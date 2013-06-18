@@ -9,7 +9,6 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.data.spreadsheet.ListEntry;
 import com.google.gdata.data.spreadsheet.ListFeed;
 import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
@@ -17,13 +16,14 @@ import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetFeed;
 import com.google.gdata.util.ServiceException;
 
-public class WorksheetTest {
+public class MyWorksheetTest {
 
 	@Test
 	public void testGetRowData() throws IOException, ServiceException {
-		SpreadsheetReader spreadsheetReader = new SpreadsheetReader();
-		SpreadsheetService service = spreadsheetReader.getSpreadsheetService();
-		List<SpreadsheetEntry> spreadsheets = spreadsheetReader
+		MySpreadsheets mySpreadsheets=new MySpreadsheets();
+		User user = new User();
+		MySpreadsheetService service = new MySpreadsheetService("SpreadsheetReader", user);
+		List<SpreadsheetEntry> spreadsheets = mySpreadsheets
 				.getSpreadsheets();
 		SpreadsheetEntry spreadsheetEntry = spreadsheets.get(0);
 		WorksheetFeed worksheetFeed = service.getFeed(
@@ -33,7 +33,7 @@ public class WorksheetTest {
 		URL listFeedUrl = worksheetEntry.getListFeedUrl();
 		ListFeed listFeed = service.getFeed(listFeedUrl, ListFeed.class);
 		ListEntry listEntry = listFeed.getEntries().get(0);
-		JSONObject eachRow = new MyWorksheet().getRowData(listFeed, listEntry);
+		JSONObject eachRow = new MyWorksheet(service).getRowData(listEntry);
 		assertNotNull(eachRow);
 	}
 }
